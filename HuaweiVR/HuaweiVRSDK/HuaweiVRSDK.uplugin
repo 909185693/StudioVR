@@ -1,0 +1,28 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "2.0.0.32",
+  "FriendlyName": "HuaweiVRSDK",
+  "Description": "",
+  "Category": "Virtual Reality",
+  "CreatedBy": "Huawei",
+  "CreatedByURL": "",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "SupportURL": "",
+  "EnabledByDefault": false,
+  "CanContainContent": true,
+  "IsBetaVersion": true,
+  "Installed": true,
+  "Modules": [
+    {
+      "Name": "HuaweiVRSDK",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "WhitelistPlatforms": [
+        "Android",
+        "Win64"
+      ]
+    }
+  ]
+}

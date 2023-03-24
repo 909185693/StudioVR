@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--HuaweiVRHMD plugin additions-->
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+  <!-- init section is always evaluated once per architecture -->
+  <init>
+    <log text="HuaweiVRSDK init"/>
+  </init>
+
+  <!-- optional files or directories to copy to Intermediate/Android/APK -->
+  <resourceCopies>
+    <log text="Copying HuaweiVRSDK runtime files to staging"/>
+
+    <isArch arch="armeabi-v7a">
+
+      <copyFile src="$S(PluginDir)/libs/android_arm/libPluginProxy.so"
+           dst="$S(BuildDir)/libs/armeabi-v7a/libPluginProxy.so" />
+
+    </isArch>
+
+    <copyFile src="$S(PluginDir)/libs/LibUpdate.jar"
+          dst="$S(BuildDir)/libs/LibUpdate.jar" />
+
+    <copyFile src="$S(PluginDir)/libs/HVRVolumePattern.png"
+          dst="$S(BuildDir)/assets/HVRVolumePattern.png" />
+		  
+    <copyFile src="$S(PluginDir)/vr_icon.png"
+          dst="$S(BuildDir)/assets/vr_icon.png" />
+
+  </resourceCopies>
+
+  <!-- optional additions to proguard -->
+  <proguardAdditions>
+    <insert>
+      -keep class com.huawei.** {
+      *;
+      }
+    </insert>
+  </proguardAdditions>
+
+  <androidManifestUpdates>
+    <addElements tag="application">
+      <meta-data android:name="com.huawei.android.vr.application.mode" android:value="vr_only"/>
+	  <meta-data android:name="com.huawei.android.vr.application.type" android:value="game"/>
+	  <meta-data android:name="com.huawei.vr.application.freeDegree" android:value="6dof" />
+    </addElements>
+
+    <addAttribute tag="activity" name="android:taskAffinity" value=":finishing"/>
+
+    <addPermission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <addPermission android:name="com.huawei.android.permission.VR"/>
+    <addPermission android:name="com.huawei.vrhandle.permission.DEVICE_MANAGER" />
+
+    <loopElements tag="activity">
+      <log text="Set HuaweiVRSDK GameActivity category 1"/>
+      <setStringFromAttribute result="activityName" tag="$" name="android:name"/>
+      <setBoolIsEqual result="bGameActivity" arg1="$S(activityName)" arg2="com.epicgames.ue4.GameActivity"/>
+      <log text="Set HuaweiVRSDK GameActivity category $S(activityName) Result = $B(bGameActivity)"/>
+      <if condition="bGameActivity">
+        <true>
+          <log text="Set HuaweiVRSDK GameActivity category 2"/>
+
+          <!-- Check for existing intent filter -->
+          <setBool result="bHasIntentFilter" value="false" />
+          <loopElements tag="intent-filter">
+            <setBool result="bHasIntentFilter" value="true" />
+          </loopElements>
+
+          <!-- If no intent filter found, add a new one -->
+          <if condition="bHasIntentFilter">
+            <false>
+              <setElement result="newIntentFilter" value="intent-filter" />
+              <addElement tag="$" name="newIntentFilter" />
+            </false>
+          </if>
+
+          <!-- add DEFAULT intent category instead -->
+          <setElement result="intentAction" value="action"/>
+          <addAttribute tag="$intentAction" name="android:name" value="com.huawei.android.vr.action.MAIN"/>
+          <addElement tag="intent-filter" name="intentAction"/>
+          
+          <!-- add DEFAULT intent category instead -->
+          <setElement result="intentInfo" value="category"/>
+          <addAttribute tag="$intentInfo" name="android:name" value="android.intent.category.DEFAULT"/>
+          <addElement tag="intent-filter" name="intentInfo"/>
+        </true>
+      </if>
+
+      <setBoolIsEqual result="bSplashActivity" arg1="$S(activityName)" arg2="com.epicgames.ue4.SplashActivity"/>
+      <log text="Set HuaweiVRSDK GameActivity category $S(activityName) Result = $B(bSplashActivity)"/>
+      <if condition="bSplashActivity">
+        <true>
+          <loopElements tag="intent-filter">
+            <removeElement tag="$"/>
+          </loopElements>
+        </true>
+      </if>
+    </loopElements>
+
+  </androidManifestUpdates>
+
+  <gameActivityImportAdditions>
+    <insert>
+import com.huawei.hvr.*;
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.opengl.GLES20;
+import android.opengl.GLUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+    </insert>
+  </gameActivityImportAdditions>
+
+  <gameActivityClassAdditions>
+    <insert>
+    public native void nativeOnCreate();
+    public native void nativeOnPause();
+    public native void nativeOnResume();
+    public native void nativeOnDestory();
+    
+    private boolean saveBitmapAsPng(Bitmap bitmap, String name) {
+		    File file = new File("/sdcard/" + name + ".png");
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        try {
+            fos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+	  }
+
+    public boolean drawVolumeTexture(int leftEyeTexId, int rightEyeTexId, int level) {
+        Log.debug("==============> saveBitmapAsPng drawVolumeTexture!");
+        AssetManager as = getApplicationContext().getAssets();
+        Bitmap bmpVolumePattern = null;
+        try {
+            InputStream is = as.open("HVRVolumePattern.png");
+            bmpVolumePattern = BitmapFactory.decodeStream(is);
+        } catch(IOException e) {
+            e.printStackTrace();
+            Log.debug("==============> saveBitmapAsPng drawVolumeTexture open failed!");
+            return false;
+        }
+
+        Bitmap bmpLeftVolumeLevel = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888);
+        Canvas cvsLeft = new Canvas(bmpLeftVolumeLevel);        
+        Bitmap bmpRightVolumeLevel = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888);
+        Canvas cvsRight = new Canvas(bmpRightVolumeLevel);
+        
+        Rect src = new Rect(0, 117 * level, 538, 117 * (level + 1));
+        
+        int displayWidth = 213;//284;//142;
+        int displayHeight = 45;//58;//30;
+        
+        int leftDstLeft = 157;//121;//209;
+        int rightDstLeft = 142;//106;//177;
+        int DstTop = 163;//192;//210;
+        int leftDstRight = leftDstLeft + displayWidth;
+        int rightDstRight = rightDstLeft + displayWidth;
+        int DstBottom = DstTop + displayHeight;
+        
+        Paint pt = new Paint();
+        pt.setAntiAlias(true);
+        Rect dstLeft = new Rect(leftDstLeft, DstTop, leftDstRight, DstBottom);
+        cvsLeft.drawBitmap(bmpVolumePattern, src, dstLeft, pt);
+        Rect dstRight = new Rect(rightDstLeft, DstTop, rightDstRight, DstBottom);
+        cvsRight.drawBitmap(bmpVolumePattern, src, dstRight, pt);
+        
+        Matrix m = new Matrix();
+        m.setScale(1, -1);
+        Bitmap reverseLeftVolumeLevel = Bitmap.createBitmap(bmpLeftVolumeLevel, 0, 0, bmpLeftVolumeLevel.getWidth(), bmpLeftVolumeLevel.getHeight(), m, true);
+        Bitmap reverseRightVolumeLevel = Bitmap.createBitmap(bmpRightVolumeLevel, 0, 0, bmpRightVolumeLevel.getWidth(), bmpRightVolumeLevel.getHeight(), m, true);
+        
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, leftEyeTexId);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, reverseLeftVolumeLevel, 0);
+        
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, rightEyeTexId);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, reverseRightVolumeLevel, 0);
+
+        return true;
+     }
+
+    </insert>
+  </gameActivityClassAdditions>
+
+  <gameActivityOnCreateAdditions>
+    <insert>
+      System.loadLibrary("PluginProxy");
+      new LibUpdateClient(this).runUpdate();
+
+      nativeOnCreate();
+    </insert>
+  </gameActivityOnCreateAdditions>
+
+  <gameActivityOnPauseAdditions>
+    <insert>
+        nativeOnPause();
+    </insert>
+  </gameActivityOnPauseAdditions>
+
+  <gameActivityOnResumeAdditions>
+    <insert>
+        nativeOnResume();
+    </insert>
+  </gameActivityOnResumeAdditions>
+
+  <gameActivityOnDestroyAdditions>
+    <insert>
+        nativeOnDestory();
+    </insert>
+  </gameActivityOnDestroyAdditions>
+
+</root>

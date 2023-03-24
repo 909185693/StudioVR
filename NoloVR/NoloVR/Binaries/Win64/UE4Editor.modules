@@ -1,0 +1,8 @@
+{
+	"BuildId": "10570792",
+	"Modules": 
+	{
+		"NoloVR": "UE4Editor-NoloVR.dll",
+		"NoloVRController": "UE4Editor-NoloVRController.dll"
+	}
+}
