@@ -1,0 +1,8 @@
+{
+	"BuildId": "17155196",
+	"Modules": 
+	{
+		"GSXRHMD": "UE4Editor-GSXRHMD.dll",
+		"GSXRInput": "UE4Editor-GSXRInput.dll"
+	}
+}

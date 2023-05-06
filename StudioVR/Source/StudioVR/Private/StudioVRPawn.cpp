@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "StudioVRPawn.h"
-#include "StudioVR.h"
+#include "StudioVRPrivate.h"
 #include "IXRTrackingSystem.h"
 #include "Camera/CameraComponent.h"
 

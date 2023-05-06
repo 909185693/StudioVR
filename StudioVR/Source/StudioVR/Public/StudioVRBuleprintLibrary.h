@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Components/GestureMeshComponent.h"
-#include "StudioVR.h"
+#include "StudioVRPrivate.h"
 #include "StudioVRBuleprintLibrary.generated.h"
 
 

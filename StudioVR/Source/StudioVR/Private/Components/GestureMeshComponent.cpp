@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/GestureMeshComponent.h"
-#include "StudioVR.h"
+#include "StudioVRPrivate.h"
 
 
 const FGestureBonePose& UGestureMeshComponent::GetGestureBonePose(EGestureBone GestureBone) const

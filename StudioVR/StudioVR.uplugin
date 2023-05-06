@@ -11,7 +11,7 @@
     "MarketplaceURL": "",
     "SupportURL": "",
     "CanContainContent": true,
-	"EnabledByDefault": false,
+	  "EnabledByDefault": false,
     "IsBetaVersion": false,
     "IsExperimentalVersion": false,
     "Installed": false,
@@ -20,52 +20,6 @@
             "Name": "StudioVR",
             "Type": "Runtime",
             "LoadingPhase": "Default"
-        }
-    ],
-    "Plugins": [
-        {
-            "Name": "HuaweiVRSDK",
-            "Enabled": false
-        },
-        {
-            "Name": "HuaweiVRController",
-            "Enabled": false
-        },
-        {
-            "Name": "WaveVR",
-            "Enabled": false
-        },
-        {
-            "Name": "PicoMobile",
-            "Enabled": false
-        },
-        {
-            "Name": "PicoMobileController",
-            "Enabled": false
-        },
-        {
-            "Name": "PicoNeoController",
-            "Enabled": false
-        },
-        {
-            "Name": "OnlineSubsystemPico",
-            "Enabled": false
-        },
-        {
-            "Name": "OculusVR",
-            "Enabled": false
-        },
-        {
-            "Name": "SteamVR",
-            "Enabled": false
-        },
-        {
-            "Name": "NoloVR",
-            "Enabled": false
-        },
-        {
-            "Name": "NibiruHMD",
-            "Enabled": false
         }
     ]
 }

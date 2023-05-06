@@ -2,7 +2,7 @@
 
 #include "Components/AdaptiveControllerComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "StudioVR.h"
+#include "StudioVRPrivate.h"
 
 
 void UAdaptiveControllerComponent::BeginPlay()

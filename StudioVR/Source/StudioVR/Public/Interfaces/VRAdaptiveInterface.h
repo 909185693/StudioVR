@@ -27,6 +27,8 @@ namespace EDeviceType
 	static const uint8 PP_Gun = 13;
 
 	static const uint8 Nolo = 14;
+
+	static const uint8 GSXR = 15;
 };
 
 class IVRAdaptiveInterface

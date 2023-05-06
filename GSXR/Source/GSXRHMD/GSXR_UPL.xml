@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+    <init>
+        <log text="GSXR init"/>
+    </init>
+    
+    <androidManifestUpdates>
+        
+        <addPermission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+        <addPermission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+        <addPermission android:name="android.permission.INTERNET"/>
+        <addPermission android:name="android.permission.GET_TASKS"/>
+        <addPermission android:name="android.permission.ACCESS_WIFI_STATE"/>
+        <addPermission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+        <addPermission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+        <addPermission android:name="android.permission.BLUETOOTH_ADMIN"/>
+        <addPermission android:name="android.permission.BLUETOOTH"/>
+
+        <addFeature android:name="android.software.vr.mode" android:required="true"/>
+      
+        <loopElements tag="activity">
+            <setStringFromAttribute result="activityName" tag="$" name="android:name"/>
+            <setBoolIsEqual result="bGameActivity" arg1="$S(activityName)" arg2="com.epicgames.ue4.GameActivity"/>
+            <if condition="bGameActivity">
+                <true>
+                    <setBool result="bHasIntentFilter" value="false"/>
+                    <loopElements tag="intent-filter">
+                        <setBool result="bHasIntentFilter" value="true"/>
+                    </loopElements>
+
+                    <!-- If no intent filter found, add a new one -->
+                    <if condition="bHasIntentFilter">
+                        <false>
+                            <setBool result="bHasIntentFilter" value="true"/>
+                            <setElement result="newIntentFilter" value="intent-filter"/>
+                            <addElement tag="$" name="newIntentFilter"/>
+                        </false>
+                    </if>
+
+
+                  <setElement result="intentInfo" value="category"/>
+                  <addAttribute tag="$intentInfo" name="android:name" value="com.general.intent.category.XR"/>
+                  <addElement tag="intent-filter" name="intentInfo"/>
+                </true>
+            </if>
+        </loopElements>
+    </androidManifestUpdates>
+
+    <!-- optional additions to proguard
+    <proguardAdditions>
+        <insert>
+            <log text="GSXR proguardAdditions"/>
+        </insert>
+    </proguardAdditions> -->
+
+  
+    <resourceCopies>
+        <isArch arch="armeabi-v7a">
+            <copyFile src="$S(PluginDir)/../ThirdParty/GSXRLibrary/armeabi-v7a/libgsxr_loader.so"
+                      dst="$S(BuildDir)/libs/armeabi-v7a/libgsxr_loader.so" />
+        </isArch>
+
+        <isArch arch="arm64-v8a">
+            <copyFile src="$S(PluginDir)/../ThirdParty/GSXRLibrary/arm64-v8a/libgsxr_loader.so"
+                      dst="$S(BuildDir)/libs/arm64-v8a/libgsxr_loader.so" />
+        </isArch>
+      <copyFile src="$S(PluginDir)/../ThirdParty/GSXRLibrary/chnnel-gsxr-origin.jar"
+             dst="$S(BuildDir)/libs/chnnel-gsxr-origin.jar" />
+    </resourceCopies>
+
+    <!-- optional additions to the GameActivity imports in GameActivity.java	-->
+    <gameActivityImportAdditions>
+     <insert>
+       import android.util.Log;      
+     </insert>>
+    </gameActivityImportAdditions>
+
+
+    <!-- optional additions to the GameActivity class in GameActivity.java -->
+    <gameActivityClassAdditions>
+        <insert>
+        
+        </insert>
+    </gameActivityClassAdditions>
+
+    <!-- optional additions to GameActivity onCreate metadata reading in GameActivity.java -->
+    <gameActivityReadMetadataAdditions>
+        <insert>
+            Log.debug("========== GSXRHMD:gameActivityReadMetadataAdditions ==========");
+        </insert>
+
+    </gameActivityReadMetadataAdditions>
+
+    <!-- optional additions to GameActivity onCreate in GameActivity.java	-->
+    <gameActivityOnCreateAdditions>
+        <insert>
+          Log.debug("========== GSXRHMD:gameActivityOnDestroyAdditions ==========");
+        
+        </insert>
+    </gameActivityOnCreateAdditions>
+
+    <!-- optional additions to GameActivity onDestroy in GameActivity.java	-->
+    <gameActivityOnDestroyAdditions>
+        <insert>
+          Log.debug("========== GSXRHMD:gameActivityOnDestroyAdditions ==========");
+        </insert>
+    </gameActivityOnDestroyAdditions>
+
+
+    <!-- optional additions to GameActivity onStart in GameActivity.java	-->
+    <gameActivityOnStartAdditions>
+        <insert>
+            Log.debug("========== GSXRHMD:gameActivityOnStartAdditions ==========");
+        </insert>
+    </gameActivityOnStartAdditions>
+
+
+    <!-- optional additions to GameActivity onStop in GameActivity.java	-->
+    <gameActivityOnStopAdditions>
+        <insert>
+            Log.debug("========== GSXRHMD:gameActivityOnStopAdditions ==========");
+        </insert>
+    </gameActivityOnStopAdditions>
+
+
+    <!-- optional additions to GameActivity onPause in GameActivity.java	-->
+    <gameActivityOnPauseAdditions>
+        <insert>
+            Log.debug("========== GSXRHMD:gameActivityOnPauseAdditions ==========");
+        </insert>
+    </gameActivityOnPauseAdditions>
+
+
+    <!-- optional additions to GameActivity onResume in GameActivity.java	-->
+    <gameActivityOnResumeAdditions>
+        <insert>
+            Log.debug("========== GSXRHMD:gameActivityOnResumeAdditions ==========");
+        </insert>
+    </gameActivityOnResumeAdditions>
+
+
+    <!-- optional additions to GameActivity onActivityResult in GameActivity.java	-->
+    <gameActivityOnActivityResultAdditions>
+        <insert>
+            Log.debug("========== GSXRHMD:gameActivityOnActivityResultAdditions ==========");
+        </insert>
+    </gameActivityOnActivityResultAdditions>
+
+
+    <!-- optional libraries to load in GameActivity.java before libUE4.so -->
+    <soLoadLibrary>
+    </soLoadLibrary>
+</root>
