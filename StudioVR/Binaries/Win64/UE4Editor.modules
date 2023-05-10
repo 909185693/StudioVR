@@ -2,6 +2,10 @@
 	"BuildId": "17155196",
 	"Modules": 
 	{
+		"GSXRAdapter": "UE4Editor-GSXRAdapter.dll",
+		"OculusVRAdapter": "UE4Editor-OculusVRAdapter.dll",
+		"PicoVRAdapter": "UE4Editor-PicoVRAdapter.dll",
+		"SteamVRAdapter": "UE4Editor-SteamVRAdapter.dll",
 		"StudioVR": "UE4Editor-StudioVR.dll"
 	}
 }

@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interfaces/VRAdaptiveInterface.h"
+#include "Interfaces/StudioVRAdapterInterface.h"
 
 
 DECLARE_LOG_CATEGORY_EXTERN(LogStudioVR, Log, All);
 
 // È«¾ÖVRÉèÅäÆ÷
-extern IVRAdaptiveInterface* GVRAdapter;
+extern IStudioVRAdapterInterface* GVRAdapter;
 

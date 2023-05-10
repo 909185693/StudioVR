@@ -1,0 +1,10 @@
+{
+	"BuildId": "17155196",
+	"Modules": 
+	{
+		"PICOXREditor": "UE4Editor-PICOXREditor.dll",
+		"PICOXRHMD": "UE4Editor-PICOXRHMD.dll",
+		"PICOXRInput": "UE4Editor-PICOXRInput.dll",
+		"PICOXRMRC": "UE4Editor-PICOXRMRC.dll"
+	}
+}

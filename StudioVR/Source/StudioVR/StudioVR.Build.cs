@@ -18,7 +18,7 @@ public class StudioVR : ModuleRules
 
         PublicIncludePaths.AddRange(
             new string[] {
-                // ... add other public include paths required here ...
+                Path.Combine(ModuleDirectory, "Public/Interfaces")
             }
         );
 
@@ -90,103 +90,37 @@ public class StudioVR : ModuleRules
         if (VRAdapterType == "HuaweiVR")
         {
             BuildDefinitions["BUILD_VR_HUAWEI"] = 1;
-
-            DynamicallyLoadedModuleNames.AddRange(
-                new string[]
-                {
-                    "HuaweiVRSDK",
-                    "HuaweiVRController"
-                }
-            );
-
-            PublicIncludePaths.AddRange(
-                new string[] {
-                    PluginDirectory + "../../HuaweiVR/HuaweiVRController/Source/HuaweiVRController/Public",
-                    PluginDirectory + "../../HuaweiVR/HuaweiVRController/Source/HuaweiVRController/Private",
-                }
-            );
+            DynamicallyLoadedModuleNames.Add("HuaweiVRAdapter");
         }
         else if (VRAdapterType == "WaveVR")
         {
             BuildDefinitions["BUILD_VR_WAVE"] = 1;
-
-            DynamicallyLoadedModuleNames.AddRange(
-                new string[]
-                {
-                    "WVR",
-                    "WaveVR",
-                    "WaveVRInput",
-                    "WaveVRGesture"
-                }
-            );
-
-            PublicIncludePaths.AddRange(
-                new string[] {
-                    PluginDirectory + "../../WaveVR/Source/WaveVR/Public",
-                    PluginDirectory + "../../WaveVR/Source/WaveVR/Private",
-                }
-            );
+            DynamicallyLoadedModuleNames.Add("WaveVRAdapter");
         }
         else if (VRAdapterType == "PicoVR")
         {
             BuildDefinitions["BUILD_VR_PICO"] = 1;
-
-            DynamicallyLoadedModuleNames.AddRange(
-                new string[]
-                {
-                    "PicoMobile",
-                    "PicoMobileController",
-                    "PicoNeoController",
-                    "OnlineSubsystemPico"
-                }
-            );
+            DynamicallyLoadedModuleNames.Add("PicoVRAdapter");
         }
         else if (VRAdapterType == "OculusVR")
         {
             BuildDefinitions["BUILD_VR_OCULUS"] = 1;
-
-            DynamicallyLoadedModuleNames.AddRange(
-                new string[]
-                {
-                    "OculusHMD",
-                    "OculusMR"
-                }
-            );
+            DynamicallyLoadedModuleNames.Add("OculusVRAdapter");
         }
         else if (VRAdapterType == "SteamVR")
         {
             BuildDefinitions["BUILD_VR_STEAM"] = 1;
-
-            DynamicallyLoadedModuleNames.AddRange(
-                new string[]
-                {
-                    "SteamVR"
-                }
-            );
+            DynamicallyLoadedModuleNames.Add("SteamVRAdapter");
         }
         else if (VRAdapterType == "NoloVR")
         {
             BuildDefinitions["BUILD_VR_NOLO"] = 1;
-
-            DynamicallyLoadedModuleNames.AddRange(
-                new string[]
-                {
-                    "NoloVR",
-                    "NibiruHMD"
-                }
-            );
+            DynamicallyLoadedModuleNames.Add("NoloVRAdapter");
         }
         else if (VRAdapterType == "GSXR")
         {
             BuildDefinitions["BUILD_VR_GSXR"] = 1;
-
-            DynamicallyLoadedModuleNames.AddRange(
-                new string[]
-                {
-                    "GSXRHMD",
-                    "GSXRInput"
-                }
-            );
+            DynamicallyLoadedModuleNames.Add("GSXRAdapter");
         }
         else
         {

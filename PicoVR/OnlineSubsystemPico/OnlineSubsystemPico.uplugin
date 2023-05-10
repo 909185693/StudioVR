@@ -1,21 +1,20 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "1.2.6.1",
-	"FriendlyName": "Online Subsystem Pico",
-	"Description": "Access to Pico platform",
-	"Category": "Online Platform",
-	"CreatedBy": "Pico Technology Co., Ltd",
+	"VersionName": "8.0",
+	"FriendlyName": "OnlineSubsystemPICO",
+	"Description": "",
+	"Category": "OnlineSubsystem",
+	"CreatedBy": "PICO Technology Co., Ltd",
 	"CreatedByURL": "https://www.pico-interactive.com/",
-	"DocsURL": "",
+	"DocsURL": "https://developer-global.pico-interactive.com/document/ue4/about-sdk",
 	"MarketplaceURL": "",
 	"SupportURL": "",
 	"EnabledByDefault": false,
+	"EngineVersion": "",
 	"CanContainContent": true,
-	"IsBetaVersion": false,
 	"Installed": true,
-	"Modules": 
-	[
+	"Modules": [
 		{
 			"Name": "OnlineSubsystemPico",
 			"Type": "Runtime",
@@ -26,18 +25,13 @@
 			]
 		}
 	],
-	"Plugins": 
-	[
+	"Plugins": [
 		{
 			"Name": "OnlineSubsystem",
 			"Enabled": true
 		},
 		{
 			"Name": "OnlineSubsystemUtils",
-			"Enabled": true
-		},
-		{
-			"Name": "PicoMobile",
 			"Enabled": true
 		}
 	]

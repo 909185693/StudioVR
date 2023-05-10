@@ -9,26 +9,10 @@
 #include "ISettingsSection.h"
 #endif
 
-#if BUILD_VR_HUAWEI
-#include "VRAdapter/VRAdapter_Huawei.h"
-#elif BUILD_VR_WAVE
-#include "VRAdapter/VRAdapter_Wave.h"
-#elif BUILD_VR_PICO
-#include "VRAdapter/VRAdapter_Pico.h"
-#elif BUILD_VR_OCULUS
-#include "VRAdapter/VRAdapter_Oculus.h"
-#elif BUILD_VR_STEAM
-#include "VRAdapter/VRAdapter_Steam.h"
-#elif BUILD_VR_NOLO
-#include "VRAdapter/VRAdapter_Nolo.h"
-#elif BUILD_VR_GSXR
-#include "VRAdapter/VRAdapter_GSXR.h"
-#endif
-
 
 #define LOCTEXT_NAMESPACE "FStudioVRModule"
 
-IVRAdaptiveInterface* GVRAdapter = nullptr;
+IStudioVRAdapterInterface* GVRAdapter = nullptr;
 
 class FStudioVRModule : public IModuleInterface
 {
@@ -38,36 +22,19 @@ public:
 	virtual void StartupModule() override
 	{
 	#if BUILD_VR_HUAWEI
-		FModuleManager::Get().LoadModuleChecked(TEXT("HuaweiVRSDK"));
-		FModuleManager::Get().LoadModuleChecked(TEXT("HuaweiVRController"));
-		GVRAdapter = new FVRAdapter_Huawei();
+		FModuleManager::Get().LoadModuleChecked(TEXT("HuaweiVRAdapter"));
 	#elif BUILD_VR_WAVE
-		FModuleManager::Get().LoadModuleChecked(TEXT("WVR"));
-		FModuleManager::Get().LoadModuleChecked(TEXT("WaveVR"));
-		FModuleManager::Get().LoadModuleChecked(TEXT("WaveVRInput"));
-		FModuleManager::Get().LoadModuleChecked(TEXT("WaveVRGesture"));
-		GVRAdapter = new FVRAdapter_Wave();
+		FModuleManager::Get().LoadModuleChecked(TEXT("WaveVRAdapter"));
 	#elif BUILD_VR_PICO
-		FModuleManager::Get().LoadModuleChecked(TEXT("PicoMobile"));
-		FModuleManager::Get().LoadModuleChecked(TEXT("PicoMobileController"));
-		FModuleManager::Get().LoadModuleChecked(TEXT("PicoNeoController"));
-		FModuleManager::Get().LoadModuleChecked(TEXT("OnlineSubsystemPico"));
-		GVRAdapter = new FVRAdapter_Pico();
+		FModuleManager::Get().LoadModuleChecked(TEXT("PicoVRAdapter"));
 	#elif BUILD_VR_OCULUS
-		FModuleManager::Get().LoadModuleChecked(TEXT("OculusHMD"));
-		FModuleManager::Get().LoadModuleChecked(TEXT("OculusMR"));
-		GVRAdapter = new FVRAdapter_Oculus();
+		FModuleManager::Get().LoadModuleChecked(TEXT("OculusVRAdapter"));
 	#elif BUILD_VR_STEAM
-		FModuleManager::Get().LoadModuleChecked(TEXT("SteamVR"));
-		GVRAdapter = new FVRAdapter_Steam();
+		FModuleManager::Get().LoadModuleChecked(TEXT("SteamVRAdapter"));
 	#elif BUILD_VR_NOLO
-		FModuleManager::Get().LoadModuleChecked(TEXT("NoloVR"));
-		FModuleManager::Get().LoadModuleChecked(TEXT("NibiruHMD"));
-		GVRAdapter = new FVRAdapter_Nolo();
+		FModuleManager::Get().LoadModuleChecked(TEXT("NoloVRAdapter"));
 	#elif BUILD_VR_GSXR
-		FModuleManager::Get().LoadModuleChecked(TEXT("GSXRHMD"));
-		FModuleManager::Get().LoadModuleChecked(TEXT("GSXRInput"));
-		GVRAdapter = new FVRAdapter_GSXR();
+		FModuleManager::Get().LoadModuleChecked(TEXT("GSXRAdapter"));
 	#endif
 
 		RegisterSettings();
@@ -82,6 +49,11 @@ public:
 		}
 
 		UnregisterSettings();
+	}
+
+	virtual void RegisterVRAdapter(IStudioVRAdapterInterface* VRAdapter)
+	{
+		GVRAdapter = VRAdapter;
 	}
 
 	void RegisterSettings()
