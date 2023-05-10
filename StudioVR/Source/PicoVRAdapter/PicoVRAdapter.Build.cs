@@ -30,23 +30,12 @@ public class PicoVRAdapter : ModuleRules
 				"Engine",
                 "HeadMountedDisplay",
                 "StudioVR",
-                "PICOXRHMD",
-                "PICOXRInput",
-                "PICOXRMRC",
-                "PicoSpatialAudio",
-                "OnlineSubsystemPico"
+                "OnlineSubsystemPico",
+                "PicoMobile",
+                "PicoMobileController",
+                "PicoNeoController"
             }
 		);
-
-        if (Target.Type == TargetType.Editor)
-        {
-            PublicDependencyModuleNames.AddRange(
-                new string[]
-                {
-                    "PICOXREditor"
-                }
-            );
-        }
 
 
         PrivateDependencyModuleNames.AddRange(

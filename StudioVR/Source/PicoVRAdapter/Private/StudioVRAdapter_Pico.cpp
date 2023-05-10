@@ -2,8 +2,8 @@
 
 #include "StudioVRAdapter_Pico.h"
 #include "Components/AdaptiveControllerComponent.h"
-#include "PXR_HMDFunctionLibrary.h"
-#include "PXR_InputFunctionLibrary.h"
+#include "PicoBlueprintFunctionLibrary.h"
+#include "PicoMobileControllerBFlib.h"
 
 
 void FStudioVRAdapter_Pico::Construction(UObject* Outer, const class FObjectInitializer& ObjectInitializer)
@@ -33,9 +33,13 @@ void FStudioVRAdapter_Pico::Tick(float DeltaTime)
 
 bool FStudioVRAdapter_Pico::PollControllerState(EControllerHand TrackingSource, FVector& Position, FRotator& Orientation)
 {
-	bool bIs6DOF = UPICOXRHMDFunctionLibrary::PXR_DoesSupportPositionalTracking();
+	bool bIs6DOF = false;
+	UPicoBlueprintFunctionLibrary::PicoIs6Dof(bIs6DOF);
+
 	if (!bIs6DOF)
 	{
+		UPicoMobileControllerBFlib::GetPicoControllerOrientationAndPosition(Orientation, Position);
+
 		return true;
 	}
 
@@ -54,47 +58,59 @@ void FStudioVRAdapter_Pico::AdaptationDisplayComponent(UAdaptiveControllerCompon
 		TArray<UMaterialInterface*> Materials;
 
 		EControllerHand TrackingSource = AdaptiveControllerComponent->GetTrackingSource();
-		EPICOXRControllerDeviceType ControllerDeviceType = EPICOXRControllerDeviceType::UnKnown;
-		UPICOXRInputFunctionLibrary::PXR_GetControllerDeviceType(ControllerDeviceType);
-		if (ControllerDeviceType == EPICOXRControllerDeviceType::G2)
+		int32 ControllerType = 0;
+		UPicoBlueprintFunctionLibrary::PicoGetControllerType(ControllerType);
+		if (ControllerType == 1)	// Pico G1
 		{
-			CustomDisplayMesh = LoadObject<UStaticMesh>(AdaptiveControllerComponent, TEXT("/PICOXR/Meshes/Mesh_G2.Mesh_G2"));
+			CustomDisplayMesh = LoadObject<UStaticMesh>(AdaptiveControllerComponent, TEXT("/PicoMobileController/G1/Mesh/Mesh_G1.Mesh_G1"));
 
-			Materials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PICOXR/Materials/Mat_G2Controller.Mat_G2Controller")));
+			Materials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PicoMobileController/G1/Material/M_MotionControllerG1.M_MotionControllerG1")));
 		}
-		else if (ControllerDeviceType == EPICOXRControllerDeviceType::Neo2)
+		else if (ControllerType == 2)	// Pico Neo
+		{
+			CustomDisplayMesh = LoadObject<UStaticMesh>(AdaptiveControllerComponent, TEXT("/PicoNeoController/CV/Meshs/Mesh_Neo.Mesh_Neo"));
+
+			Materials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PicoNeoController/CV/Materials/M_MotionControllerNeo.M_MotionControllerNeo")));
+		}
+		else if (ControllerType == 3)	// Pico G2
+		{
+			CustomDisplayMesh = LoadObject<UStaticMesh>(AdaptiveControllerComponent, TEXT("/PicoMobileController/G2/Mesh/Mesh_G2.Mesh_G2"));
+
+			Materials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PicoMobileController/G2/Material/M_MotionControllerG2.M_MotionControllerG2")));
+		}
+		else if (ControllerType == 4)	// Pico Neo2
 		{
 			if (TrackingSource == EControllerHand::Left)
 			{
-				CustomDisplayMesh = LoadObject<UStaticMesh>(AdaptiveControllerComponent, TEXT("/PICOXR/Meshes/Mesh_Neo2_Left.Mesh_Neo2_Left"));
+				TArray<UMaterialInterface*> OverrideMaterials;
+				OverrideMaterials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PicoNeoController/CV2/Materials/M_MotionControllerNeo2.M_MotionControllerNeo2")));
 
-				Materials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PICOXR/Materials/Mat_Neo2Controller.Mat_Neo2Controller")));
+				CreateRenderComponent(AdaptiveControllerComponent, TEXT("ppController_NEO2_Left"), TEXT("/PicoNeoController/CV2/Meshes/ppController_NEO2_Left.ppController_NEO2_Left"), FTransform(FRotator(0, 90.f, 124.f), FVector::ZeroVector), OverrideMaterials);
 			}
-			else
+			else if (TrackingSource == EControllerHand::Right)
 			{
-				CustomDisplayMesh = LoadObject<UStaticMesh>(AdaptiveControllerComponent, TEXT("/PICOXR/Meshes/Mesh_Neo2_Right.Mesh_Neo2_Right"));
+				TArray<UMaterialInterface*> OverrideMaterials;
+				OverrideMaterials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PicoNeoController/CV2/Materials/M_MotionControllerNeo2.M_MotionControllerNeo2")));
 
-				Materials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PICOXR/Materials/Mat_Neo2Controller.Mat_Neo2Controller")));
+				CreateRenderComponent(AdaptiveControllerComponent, TEXT("ppController_NEO2_Right"), TEXT("/PicoNeoController/CV2/Meshes/ppController_NEO2_Right.ppController_NEO2_Right"), FTransform(FRotator(0, 90.f, 124.f), FVector::ZeroVector), OverrideMaterials);
 			}
 		}
-		else if (ControllerDeviceType == EPICOXRControllerDeviceType::Neo3)
+		else if (ControllerType == 5)	//Pico Neo3
 		{
 			if (TrackingSource == EControllerHand::Left)
 			{
-				CustomDisplayMesh = LoadObject<UStaticMesh>(AdaptiveControllerComponent, TEXT("/PICOXR/Meshes/Mesh_Neo3_Left.Mesh_Neo3_Left"));
+				TArray<UMaterialInterface*> OverrideMaterials;
+				OverrideMaterials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PicoNeoController/CV3/Materials/M_MotionControllerNeo3.M_MotionControllerNeo3")));
 
-				Materials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PICOXR/Materials/Mat_Neo3Controller.Mat_Neo3Controller")));
+				CreateRenderComponent(AdaptiveControllerComponent, TEXT("ppController_NEO3_L"), TEXT("/PicoNeoController/CV3/Meshes/ppController_NEO3_L.ppController_NEO3_L"), FTransform(FRotator(0, 90.f, 90.f), FVector::ZeroVector), OverrideMaterials);
 			}
-			else
+			else if (TrackingSource == EControllerHand::Right)
 			{
-				CustomDisplayMesh = LoadObject<UStaticMesh>(AdaptiveControllerComponent, TEXT("/PICOXR/Meshes/Mesh_Neo3_Right.Mesh_Neo3_Right"));
+				TArray<UMaterialInterface*> OverrideMaterials;
+				OverrideMaterials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PicoNeoController/CV3/Materials/M_MotionControllerNeo3.M_MotionControllerNeo3")));
 
-				Materials.Add(LoadObject<UMaterialInterface>(AdaptiveControllerComponent, TEXT("/PICOXR/Materials/Mat_Neo3Controller.Mat_Neo3Controller")));
+				CreateRenderComponent(AdaptiveControllerComponent, TEXT("ppController_NEO3_R"), TEXT("/PicoNeoController/CV3/Meshes/ppController_NEO3_R.ppController_NEO3_R"), FTransform(FRotator(0, 90.f, 90.f), FVector::ZeroVector), OverrideMaterials);
 			}
-		}
-		else if (ControllerDeviceType == EPICOXRControllerDeviceType::PICO_4)
-		{
-
 		}
 
 		if (CustomDisplayMesh != nullptr)

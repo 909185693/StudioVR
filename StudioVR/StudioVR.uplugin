@@ -21,54 +21,5 @@
       "Type": "Runtime",
       "LoadingPhase": "Default"
     }
-  ],
-  "Plugins": [
-    {
-      "Name": "GSXR",
-      "Enabled": false
-    },
-    {
-      "Name": "HuaweiVRSDK",
-      "Enabled": false,
-      "SupportedTargetPlatforms": [
-        "Android"
-      ]
-    },
-    {
-      "Name": "HuaweiVRController",
-      "Enabled": false
-    },
-    {
-      "Name": "NoloVR",
-      "Enabled": false
-    },
-    {
-      "Name": "NibiruHMD",
-      "Enabled": false
-    },
-    {
-      "Name": "PICOXR",
-      "Enabled": false
-    },
-    {
-      "Name": "PicoSpatialAudio",
-      "Enabled": false
-    },
-    {
-      "Name": "OnlineSubsystemPico",
-      "Enabled": false
-    },
-    {
-      "Name": "WaveVR",
-      "Enabled": false
-    },
-    {
-      "Name": "SteamVR",
-      "Enabled": false
-    },
-    {
-      "Name": "OculusVR",
-      "Enabled": false
-    }
   ]
 }
