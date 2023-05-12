@@ -2,13 +2,11 @@
 
 #pragma once
 
-#if BUILD_VR_NOLO
-
 #include "CoreMinimal.h"
-#include "VRAdapter_Implementation.h"
+#include "StudioVRAdapter_Implementation.h"
 
 
-class FVRAdapter_Nolo : public FVRAdapter_Implementation
+class FStudioVRAdapter_Nolo : public FStudioVRAdapter_Implementation
 {
 public:
 	// 构造/析构
@@ -28,6 +26,4 @@ public:
 	// 获取控制器类型
 	virtual uint8 GetDeviceType() const;
 };
-
-#endif // BUILD_VR_NOLO
 
